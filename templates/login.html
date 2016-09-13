@@ -1,23 +1,14 @@
-<head>
-
-  <!--LOAD PRE-REQUISITES FOR GOOGLE SIGN IN -->
-   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js">
-  </script>
-
-<script src="//apis.google.com/js/platform.js?onload=start"> </script>
-
-<!-- END PRE-REQUISITES FOR GOOGLE SIGN IN -->
+{% extends "base.html" %}
+{% block content %}
 
 
-</head>
-
-
-<body>  
-
-
-<!-- GOOGLE PLUS SIGN IN-->
-
-          
+<div class="row">
+  <div class="col-lg-3 col-md-3"></div>
+  <div class="col-sm-12 col-md-6 col-lg-6">
+  <div class="thumbnail">
+    
+        <div class="caption">
+          <h3>Login with your Google Account</h3>
           <div id="signInButton">
           <span class="g-signin"
             data-scope="openid email"
@@ -30,7 +21,17 @@
           </span>
         </div>
 
-<div id="result"></div>
+        <div id="result"></div>
+        </div>
+    </div>
+  </div>
+  <div class="col-lg-3 col-md-3"></div>
+</div>
+
+
+<!-- GOOGLE PLUS SIGN IN-->
+
+          
 
 <script>
 function signInCallback(authResult) {
@@ -71,6 +72,4 @@ function signInCallback(authResult) {
 
 <!--END GOOGLE PLUS SIGN IN -->
 
-  </body>
-
-  </html>
+{% endblock %}
