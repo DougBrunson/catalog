@@ -1,0 +1,26 @@
+/*
+red: #EC1C26
+blue: #0094D9
+*/
+
+
+.navbar {
+	min-height: 7%;
+}
+
+.navbar-nav, h1 {
+	color: #0094D9;
+}
+
+.navbar-logo {
+	max-height: 200%;
+	max-width: auto; 
+}
+
+h3 {
+	color: #0B1212;
+}
+
+p {
+	color: #666;
+}
