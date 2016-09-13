@@ -20,7 +20,7 @@ item_1 = Item(title='Nob Hill Studio', description='Lorem ipsum dolor sit amet, 
 session.add(item_1)
 session.commit()
 
-item_2 = Item(title='Charming Cole Valley Private Suite', description='Lorem ipsum dolor sit amet, consectetur adipisicing elit. Error eaque eligendi ullam enim dolore, impedit libero sequi sint maxime atque unde vero voluptatum totam rem vitae molestiae. Consectetur molestiae, ipsum!', img_url='https://a1.muscache.com/im/pictures/9632106/b0f1c4fa_original.jpg?aki_policy=x_medium')
+item_2 = Item(title='Dolores Park View (2 rooms)', description='Lorem ipsum dolor sit amet, consectetur adipisicing elit. Error eaque eligendi ullam enim dolore, impedit libero sequi sint maxime atque unde vero voluptatum totam rem vitae molestiae. Consectetur molestiae, ipsum!', img_url='https://a1.muscache.com/im/pictures/4a39d213-2024-4ae6-b931-a8c51ccef1f1.jpg?aki_policy=x_medium')
 session.add(item_2)
 session.commit()
 
