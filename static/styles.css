@@ -1,6 +1,5 @@
 /*
-red: #EC1C26
-blue: #0094D9
+airbnb: #fd5c63;
 */
 
 
@@ -27,5 +26,25 @@ p {
 }
 
 .page-header {
+	color: #fd5c63;
 	text-align: center;
+}
+
+#submit {
+	margin-top: 2%;
+}
+
+.btn-abnb {
+	color: #fd5c63;
+	font-weight: bold;
+	border: 2px solid #fd5c63;
+	background: transparent;
+}
+
+
+.btn-abnb:hover {
+	color: white;
+	font-weight: bold;
+	border: 2px solid white;
+	background: #fd5c63 !important;
 }
