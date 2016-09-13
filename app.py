@@ -174,22 +174,35 @@ def login():
 
 @app.route('/')
 def index():
-    pass
+    items = session.query(Item).all()
+    return render_template('index.html', items=items)
+    
 
 
-@app.route('/')
+@app.route('/new')
 def create():
-    pass
+    if request.method == 'POST':
+        a = None
+
+    else:
+        return render_template('new.html')
 
 
-@app.route('/')
-def read():
-    pass
+@app.route('/item/<int:item_id>/')
+def read(item_id):
+    item = session.query(Item).filter_by(id=item_id).one()
+    return render_template('read.html', item=item)
 
 
-@app.route('/')
-def edit():
-    pass
+@app.route('/<int:item_id>/edit')
+def edit(item_id):
+    if request.method == 'POST':
+        a = None
+
+    else:
+        item = session.query(Item).filter_by(id=item_id).one()
+        return render_template('edit.html', item=item)
+
 
 
 @app.route('/')
