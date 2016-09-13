@@ -6,7 +6,7 @@ from sqlalchemy import create_engine
 Base = declarative_base()
 
 
-class Items(Base):
+class Item(Base):
     __tablename__ = 'Items'
 
     id = Column(Integer, primary_key=True)
