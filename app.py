@@ -28,7 +28,6 @@ DBSession = sessionmaker(bind=engine)
 session = DBSession()
 
 
-# TODO: Finish CRUD
 # Add json api
 # implement auth
 # fix display in index.html
@@ -57,6 +56,8 @@ def getUserID(email):
         return None
 
 # Auth code from class
+
+
 @app.route('/gconnect', methods=['POST'])
 def gconnect():
     # Validate state token
@@ -178,10 +179,9 @@ def login():
 def index():
     items = session.query(Item).all()
     return render_template('index.html', items=items)
-    
 
 
-@app.route('/new', methods=['POST', "GET"])
+@app.route('/new', methods=['POST', 'GET'])
 def create():
     if request.method == 'POST':
         item = Item(title=request.form['title'],
@@ -202,11 +202,11 @@ def read(item_id):
     return render_template('read.html', item=item)
 
 
-@app.route('/<int:item_id>/edit', methods=['POST', "GET"])
+@app.route('/<int:item_id>/edit', methods=['POST', 'GET'])
 def edit(item_id):
     item = session.query(Item).filter_by(id=item_id).one()
     if request.method == 'POST':
-        item.title = request.form['title'] 
+        item.title = request.form['title']
         item.description = request.form['description']
         item.img_url = request.form['img_url']
 
@@ -218,11 +218,13 @@ def edit(item_id):
         return render_template('edit.html', item=item)
 
 
+@app.route('/<int:item_id>/delete', methods=['POST'])
+def delete(item_id):
+    item = session.query(Item).filter_by(id=item_id).one()
+    session.delete(item)
+    session.commit()
 
-@app.route('/')
-def delete():
-    pass
-
+    return redirect(url_for('index'))
 
 
 if __name__ == '__main__':
