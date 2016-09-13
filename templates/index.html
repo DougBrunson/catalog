@@ -1,6 +1,21 @@
 {% extends "base.html" %}
 {% block content %}
 
-<h1>test</h1>
+{% for item in items %}
+	
+<section class="row">
+    <div class="col-sm-12 col-md-4 col-lg-4">
+      <div class="thumbnail">
+        <img src="{{item.img_url}}" alt="...">
+        <div class="caption">
+          <h3>{{item.title}}</h3>
+          <p>{{item.description}}</p>
+        </div>
+      </div>
+
+</section>
+
+{% endfor %}
+	
 
 {% endblock %}

@@ -5,7 +5,7 @@ blue: #0094D9
 
 
 .navbar {
-	min-height: 7%;
+	min-height: 9%;
 }
 
 .navbar-nav, h1 {
@@ -14,7 +14,8 @@ blue: #0094D9
 
 .navbar-logo {
 	max-height: 200%;
-	max-width: auto; 
+	max-width: auto;
+	padding-bottom: 10px; 
 }
 
 h3 {
