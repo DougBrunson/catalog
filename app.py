@@ -30,6 +30,8 @@ session = DBSession()
 
 # TODO: Finish CRUD
 # Add json api
+# implement auth
+# fix display in index.html
 
 
 # User Helper Functions
@@ -179,10 +181,16 @@ def index():
     
 
 
-@app.route('/new')
+@app.route('/new', methods=['POST', "GET"])
 def create():
     if request.method == 'POST':
-        a = None
+        item = Item(title=request.form['title'],
+                    description=request.form['description'],
+                    img_url=request.form['img_url'])
+
+        session.add(item)
+        session.commit()
+        return redirect(url_for('index'))
 
     else:
         return render_template('new.html')
@@ -194,13 +202,19 @@ def read(item_id):
     return render_template('read.html', item=item)
 
 
-@app.route('/<int:item_id>/edit')
+@app.route('/<int:item_id>/edit', methods=['POST', "GET"])
 def edit(item_id):
+    item = session.query(Item).filter_by(id=item_id).one()
     if request.method == 'POST':
-        a = None
+        item.title = request.form['title'] 
+        item.description = request.form['description']
+        item.img_url = request.form['img_url']
+
+        session.add(item)
+        session.commit()
+        return redirect(url_for('index'))
 
     else:
-        item = session.query(Item).filter_by(id=item_id).one()
         return render_template('edit.html', item=item)
 
 
@@ -213,5 +227,4 @@ def delete():
 
 if __name__ == '__main__':
     app.secret_key = 'uB6YxmvEGccMqabK'
-    app.debug = True
-    app.run(host='0.0.0.0')
+    app.run(host='0.0.0.0', debug=True)

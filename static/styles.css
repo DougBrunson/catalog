@@ -25,3 +25,7 @@ h3 {
 p {
 	color: #666;
 }
+
+.page-header {
+	text-align: center;
+}

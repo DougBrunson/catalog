@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block content %}
+
+
+<div class="row">
+  <div class="col-lg-3 col-md-3"></div>
+  <div class="col-sm-12 col-md-6 col-lg-6">
+  <div class="thumbnail">
+      <div class="caption">
+        <h3 class="page-header">Add your Listing</h3>
+        <form action="#" method= "post" enctype="multipart/form-data">
+          <div class="form-group">
+            <label for="name">Name:</label>
+            <input type ="text" class="form-control" maxlength="250" placeholder="What is your listing called?" name="title" required="True">
+            <label for="description">Description:</label>
+            <input type ="text" class="form-control" maxlength="250" placeholder="Tell us about it..." name="description" required="True">
+            <label for="description">Image Link:</label>
+            <input type ="text" class="form-control" maxlength="250" placeholder="An image of your place" name="img_url" required="True">
+            <button type="submit" class="btn" id="submit" type="submit">Submit</button>
+          </div>
+        </form> 
+
+
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-3 col-md-3"></div>
+</div>
+
+
+
+
+{% endblock %}
