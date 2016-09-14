@@ -18,6 +18,7 @@ class Item(Base):
     __tablename__ = 'Items'
 
     id = Column(Integer, primary_key=True)
+    host = Column(String(80), nullable=False)
     title = Column(String(250), nullable=False)
     description = Column(String(250))
     img_url = Column(String(500))
@@ -27,6 +28,7 @@ class Item(Base):
         return {
             'id': self.id,
             'name': self.title,
+            'host': self.host,
             'description': self.description,
             'img': self.img_url
         }
