@@ -24,7 +24,7 @@ item_2 = Item(title='Dolores Park View (2 rooms)', description='Lorem ipsum dolo
 session.add(item_2)
 session.commit()
 
-item_3 = Item(title='Stay in the Famous Painted Ladies!', description='Lorem ipsum dolor sit amet, consectetur adipisicing elit. Error eaque eligendi ullam enim dolore, impedit libero sequi sint maxime atque unde vero voluptatum totam rem vitae molestiae. Consectetur molestiae, ipsum!', img_url='https://a2.muscache.com/im/pictures/6c856728-5b88-42bf-94a0-b6484ae1c6f0.jpg?aki_policy=x_medium')
+item_3 = Item(title='Quiet with fantastic view!', description='Lorem ipsum dolor sit amet, consectetur adipisicing elit. Error eaque eligendi ullam enim dolore, impedit libero sequi sint maxime atque unde vero voluptatum totam rem vitae molestiae. Consectetur molestiae, ipsum!', img_url='https://a2.muscache.com/im/pictures/6c856728-5b88-42bf-94a0-b6484ae1c6f0.jpg?aki_policy=x_medium')
 session.add(item_3)
 session.commit()
 
