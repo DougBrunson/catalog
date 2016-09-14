@@ -268,7 +268,7 @@ def delete(item_id):
 
 @app.route('/api/v1/item/<int:item_id>')
 def api_item(item_id):
-    item = session.query(item).filter_by(id=item_id).one()
+    item = session.query(Item).filter_by(id=item_id).one()
     return jsonify(item.serialize)
 
 
