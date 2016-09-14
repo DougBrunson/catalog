@@ -26,7 +26,7 @@ class Item(Base):
     def serialize(self):
         return {
             'id': self.id,
-            'name': self.name,
+            'name': self.title,
             'description': self.description,
             'img': self.img_url
         }
