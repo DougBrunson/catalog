@@ -14,8 +14,8 @@ import requests
 
 app = Flask(__name__)
 
-# CLIENT_ID = json.loads(
-#     open('client_secrets.json', 'r').read())['web']['client_id']
+CLIENT_ID = json.loads(
+    open('client_secrets.json', 'r').read())['web']['client_id']
 
 APPLICATION_NAME = "Airbnb"
 
@@ -26,11 +26,6 @@ Base.metadata.bind = engine
 
 DBSession = sessionmaker(bind=engine)
 session = DBSession()
-
-
-# Add json api
-# implement auth
-# fix display in index.html
 
 
 # User Helper Functions
@@ -56,8 +51,6 @@ def getUserID(email):
         return None
 
 # Auth code from class
-
-
 @app.route('/gconnect', methods=['POST'])
 def gconnect():
     # Validate state token
@@ -122,16 +115,13 @@ def gconnect():
     userinfo_url = "https://www.googleapis.com/oauth2/v1/userinfo"
     params = {'access_token': credentials.access_token, 'alt': 'json'}
     answer = requests.get(userinfo_url, params=params)
-
     data = answer.json()
 
     login_session['username'] = data['name']
     login_session['picture'] = data['picture']
     login_session['email'] = data['email']
-    # ADD PROVIDER TO LOGIN SESSION
     login_session['provider'] = 'google'
 
-    # see if user exists, if it doesn't make a new one
     user_id = getUserID(data["email"])
     if not user_id:
         user_id = createUser(login_session)
@@ -145,7 +135,6 @@ def gconnect():
     output += login_session['picture']
     output += ' " style = "width: 300px; height: 300px;border-radius: 150px;-webkit-border-radius: 150px;-moz-border-radius: 150px;"> '
     flash("you are now logged in as %s" % login_session['username'])
-    print "done!"
     return output
 
 
@@ -162,69 +151,115 @@ def gdisconnect():
     url = 'https://accounts.google.com/o/oauth2/revoke?token=%s' % access_token
     h = httplib2.Http()
     result = h.request(url, 'GET')[0]
-    if result['status'] != '200':
+
+    if result['status'] == '200':
+        del login_session['credentials']
+        del login_session['gplus_id']
+        del login_session['username']
+        del login_session['email']
+        del login_session['picture']
+
+        return redirect('/')
+    else:
         # For whatever reason, the given token was invalid.
         response = make_response(
             json.dumps('Failed to revoke token for given user.', 400))
         response.headers['Content-Type'] = 'application/json'
         return response
+    return redirect(url_for('index'))
 
 
 @app.route('/login')
 def login():
-    return render_template('login.html')
+    state = ''.join(random.choice(string.ascii_uppercase + string.digits) for x in xrange(32))
+    login_session['state'] = state
+    return render_template('login.html', STATE=state)
 
 
 @app.route('/')
 def index():
+    logged_in = 'username' in login_session
     items = session.query(Item).all()
-    return render_template('index.html', items=items)
+    return render_template('index.html', items=items, logged_in=logged_in)
 
 
 @app.route('/new', methods=['POST', 'GET'])
+@app.route('/item/new', methods=['POST', 'GET'])
+@app.route('/item/new/', methods=['POST', 'GET'])
 def create():
+    logged_in = 'username' in login_session
     if request.method == 'POST':
-        item = Item(title=request.form['title'],
-                    description=request.form['description'],
-                    img_url=request.form['img_url'])
+        if logged_in:
+            item = Item(title=request.form['title'],
+                        description=request.form['description'],
+                        img_url=request.form['img_url'])
 
-        session.add(item)
-        session.commit()
-        return redirect(url_for('index'))
+            session.add(item)
+            session.commit()
+            return redirect(url_for('index'))
+        else:
+            return redirect(url_for('login'))
 
-    else:
-        return render_template('new.html')
+    elif logged_in:
+        return render_template('new.html', logged_in=logged_in)
+    else: 
+        return redirect(url_for('login'))
 
 
+@app.route('/item/<int:item_id>')
 @app.route('/item/<int:item_id>/')
 def read(item_id):
+    logged_in = 'username' in login_session
     item = session.query(Item).filter_by(id=item_id).one()
-    return render_template('read.html', item=item)
+    return render_template('read.html', item=item, logged_in=logged_in)
 
 
-@app.route('/<int:item_id>/edit', methods=['POST', 'GET'])
+
+@app.route('/item/<int:item_id>/edit', methods=['POST', 'GET'])
+@app.route('/item/<int:item_id>/edit/', methods=['POST', 'GET'])
 def edit(item_id):
+    logged_in = 'username' in login_session
     item = session.query(Item).filter_by(id=item_id).one()
     if request.method == 'POST':
-        item.title = request.form['title']
-        item.description = request.form['description']
-        item.img_url = request.form['img_url']
+        if logged_in:
 
-        session.add(item)
+            item.title = request.form['title']
+            item.description = request.form['description']
+            item.img_url = request.form['img_url']
+
+            session.add(item)
+            session.commit()
+            return redirect(url_for('index'))
+        else:
+            return redirect(url_for('login'))
+
+    elif logged_in:
+        return render_template('edit.html', item=item, logged_in=logged_in)
+    else: 
+        return redirect(url_for('login'))
+
+
+@app.route('/item/<int:item_id>/delete', methods=['POST'])
+def delete(item_id):
+    if 'username' in login_session:
+        item = session.query(Item).filter_by(id=item_id).one()
+        session.delete(item)
         session.commit()
         return redirect(url_for('index'))
-
     else:
-        return render_template('edit.html', item=item)
+        return redirect(url_for('login'))
 
 
-@app.route('/<int:item_id>/delete', methods=['POST'])
-def delete(item_id):
-    item = session.query(Item).filter_by(id=item_id).one()
-    session.delete(item)
-    session.commit()
+@app.route('/api/v1/item/<int:item_id>')
+def api_item(item_id):
+    item = session.query(item).filter_by(id=item_id).one()
+    return jsonify(item.serialize)
 
-    return redirect(url_for('index'))
+
+@app.route('/api/v1/item/all')
+def api_all():
+    items = session.query(Item).all()
+    return jsonify(items=[i.serialize for i in items])
 
 
 if __name__ == '__main__':
