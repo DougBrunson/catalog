@@ -197,8 +197,6 @@ def login():
     return render_template('login.html', STATE=state)
 
 
-# authed = get_user_by_name(login_session['username']) == item.host
-
 @app.route('/')
 def index():
     logged_in = 'username' in login_session
@@ -254,7 +252,6 @@ def edit(item_id):
         return render_template('edit.html', item=item, logged_in=logged_in)
     else:
         abort(403)
-
 
 
 @app.route('/item/<int:item_id>/delete', methods=['POST'])
