@@ -1,9 +1,9 @@
 {% extends "base.html" %}
 {% block content %}
+<section class="row">
 
 {% for item in items %}
-	
-<section class="row">
+  
     <a href="/item/{{item.id}}">
       
     <div class="col-sm-12 col-md-4 col-lg-4">
@@ -17,9 +17,9 @@
     </div>
     </a>
 
-</section>
 
 {% endfor %}
-	
+  
+</section>
 
 {% endblock %}

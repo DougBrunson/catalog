@@ -1,5 +1,8 @@
+<link rel="stylesheet" href="../../../static/styles.css">
+
 {% extends "base.html" %}
 {% block content %}
+
 
 
 <div class="row">
@@ -16,11 +19,11 @@
             <input type ="text" class="form-control" maxlength="250" value="{{item.description}}" name="description" required="True">
             <label for="description">Image Link:</label>
             <input type ="text" class="form-control" maxlength="250" value="{{item.img_url}}" name="img_url" required="True">
-            <button type="submit" class="btn btn-abnb" id="submit">Edit</button>
+            <button type="submit" class="btn btn-abnb" id="submit">Submit</button>
           </div>
         </form>
 
-        <form action="/{{item.id}}/delete" method= "post" enctype="multipart/form-data">
+        <form action="/item/{{item.id}}/delete" method= "post" enctype="multipart/form-data">
             <button type="submit" class="btn btn-abnb" id="submit">Delete</button>
           </div>
         </form> 

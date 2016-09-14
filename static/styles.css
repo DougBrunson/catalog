@@ -12,9 +12,10 @@ airbnb: #fd5c63;
 }
 
 .navbar-logo {
-	max-height: 200%;
-	max-width: auto;
-	padding-bottom: 10px; 
+	height: 75px;
+	/* so hackish */
+	margin-top: -22px;
+	margin-bottom: 10px; 
 }
 
 h3 {
@@ -37,14 +38,37 @@ p {
 .btn-abnb {
 	color: #fd5c63;
 	font-weight: bold;
-	border: 2px solid #fd5c63;
+	border: 2px solid #fd5c63 !important;
 	background: transparent;
 }
 
 
 .btn-abnb:hover {
+	color: white !important;
+	font-weight: bold;
+	border: 2px solid white;
+	background: #fd5c63 !important;
+}
+
+
+#edit-btn {
+	padding: 2% 5%;
+	text-decoration: none;
+	color: #fd5c63;
+	font-weight: bold;
+	border: 2px solid #fd5c63;
+	border-radius: 5px;
+	background: transparent;
+}
+
+
+#edit-btn:hover {
 	color: white;
 	font-weight: bold;
 	border: 2px solid white;
 	background: #fd5c63 !important;
+}
+
+.caption, p {
+	padding-bottom: 2%;
 }

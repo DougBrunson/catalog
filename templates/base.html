@@ -37,7 +37,12 @@
         
         <ul class="nav navbar-nav navbar-right">
           <li><a href="/new">NEW</a></li>
-          <li><a href="/login">LOGIN</a></li>
+          {% if logged_in %}
+            <li><a href="/gdisconnect">LOGOUT</a></li>
+          {% else %}
+            <li><a href="/login">LOGIN</a></li>
+          {% endif %}
+
 
         </ul>
       </div><!-- /.navbar-collapse -->
