@@ -1,16 +1,17 @@
-from flask import Flask, render_template, request, redirect, jsonify, url_for, flash
+import random
+import requests
+import json
+import string
+import httplib2
+from flask import Flask, render_template, request, redirect, jsonify, url_for, flash, abort
+from flask import session as login_session
+from flask import make_response
 from sqlalchemy import create_engine, asc
 from sqlalchemy.orm import sessionmaker
 from db import Base, Item, User
-from flask import session as login_session
-import random
-import string
 from oauth2client.client import flow_from_clientsecrets
 from oauth2client.client import FlowExchangeError
-import httplib2
-import json
-from flask import make_response
-import requests
+from functools import wraps
 
 app = Flask(__name__)
 
@@ -49,6 +50,26 @@ def getUserID(email):
         return user.id
     except:
         return None
+
+
+def get_user_by_name(username):
+    user = session.query(User).filter_by(name=username).one()
+    return user
+
+
+def authorized(host):
+    current_user = login_session.get('username')
+    return current_user == host
+
+
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if 'username' not in login_session:
+            return redirect('/login')
+        return f(*args, **kwargs)
+    return decorated_function
+
 
 # Auth code from class
 @app.route('/gconnect', methods=['POST'])
@@ -176,6 +197,8 @@ def login():
     return render_template('login.html', STATE=state)
 
 
+# authed = get_user_by_name(login_session['username']) == item.host
+
 @app.route('/')
 def index():
     logged_in = 'username' in login_session
@@ -186,24 +209,20 @@ def index():
 @app.route('/new', methods=['POST', 'GET'])
 @app.route('/item/new', methods=['POST', 'GET'])
 @app.route('/item/new/', methods=['POST', 'GET'])
+@login_required
 def create():
     logged_in = 'username' in login_session
     if request.method == 'POST':
-        if logged_in:
-            item = Item(title=request.form['title'],
-                        description=request.form['description'],
-                        img_url=request.form['img_url'])
+        item = Item(title=request.form['title'],
+                    description=request.form['description'],
+                    img_url=request.form['img_url'],
+                    host=login_session['username'])
+        session.add(item)
+        session.commit()
+        return redirect(url_for('index'))
 
-            session.add(item)
-            session.commit()
-            return redirect(url_for('index'))
-        else:
-            return redirect(url_for('login'))
-
-    elif logged_in:
+    else:
         return render_template('new.html', logged_in=logged_in)
-    else: 
-        return redirect(url_for('login'))
 
 
 @app.route('/item/<int:item_id>')
@@ -214,35 +233,35 @@ def read(item_id):
     return render_template('read.html', item=item, logged_in=logged_in)
 
 
-
 @app.route('/item/<int:item_id>/edit', methods=['POST', 'GET'])
 @app.route('/item/<int:item_id>/edit/', methods=['POST', 'GET'])
+@login_required
 def edit(item_id):
-    logged_in = 'username' in login_session
     item = session.query(Item).filter_by(id=item_id).one()
-    if request.method == 'POST':
-        if logged_in:
+    logged_in = 'username' in login_session
+    user_authed = authorized(item.host)
 
-            item.title = request.form['title']
-            item.description = request.form['description']
-            item.img_url = request.form['img_url']
+    if request.method == 'POST' and user_authed:
+        item.title = request.form['title']
+        item.description = request.form['description']
+        item.img_url = request.form['img_url']
 
-            session.add(item)
-            session.commit()
-            return redirect(url_for('index'))
-        else:
-            return redirect(url_for('login'))
+        session.add(item)
+        session.commit()
+        return redirect(url_for('index'))
 
-    elif logged_in:
+    elif user_authed:
         return render_template('edit.html', item=item, logged_in=logged_in)
-    else: 
-        return redirect(url_for('login'))
+    else:
+        abort(403)
+
 
 
 @app.route('/item/<int:item_id>/delete', methods=['POST'])
+@login_required
 def delete(item_id):
-    if 'username' in login_session:
-        item = session.query(Item).filter_by(id=item_id).one()
+    item = session.query(Item).filter_by(id=item_id).one()
+    if 'username' in login_session and authorized(item.host):
         session.delete(item)
         session.commit()
         return redirect(url_for('index'))
